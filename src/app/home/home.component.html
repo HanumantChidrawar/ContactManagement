@@ -1,0 +1,236 @@
+<section class="container-fluid">
+
+
+  <div class="row">
+
+    <!-- contact list section i.e left side section-->
+
+    <div class="col-12 col-sm-4 top-margin"><!-- this search when user perform search by Display name i.e by default-->
+      
+      <h4>Search By</h4>
+      <div class="chipSection">
+          <mat-chip-list #chipList>
+            <mat-chip *ngFor="let chip of searchChips" [selectable]="true" [selected]="chip === selectedChip" (select)="chipChanged($event)" (click)="selectChip(chip)">
+              {{chip}}
+            </mat-chip>
+          </mat-chip-list>
+        </div>
+    
+
+      <mat-form-field style="width: 100%">
+        <input matInput placeholder="Search Contacts" name="filterName" [(ngModel)]='filterText' class="example-right-align">
+        <span matSuffix>
+          <i class="material-icons">
+            search
+          </i>
+        </span>
+      </mat-form-field>
+
+
+      <div class="contacts-list">
+        <mat-card class="example-card" *ngFor="let contact of contacts | contactsFilter: filterText: selectedChip ; index as i"
+          [ngClass]="{'selected-contact': i == selectedId}" (click)="displayDetails(i)">
+          <mat-card-header>
+            <div mat-card-avatar class="example-header-image"></div>
+            <mat-card-title>{{contact["Display Name"]}}</mat-card-title>
+            <mat-card-subtitle>{{contact["Home Phone"]}}</mat-card-subtitle>
+          </mat-card-header>
+        </mat-card>
+      </div>
+
+    </div>
+    <!-- end of left side section-->
+
+    <!-- contact details section i.e right side section-->
+    <!-- when a contact is selected-->
+    <div class="col-12 col-sm-8 top-margin" *ngIf="selectedContact">
+      <h3>Contact Details</h3>
+      <form class="example-form" #updateContactForm="ngForm" (ngSubmit)="updateContact()">
+        <mat-form-field class="example-full-width">
+          <input matInput placeholder="Display Name" name="displayName" [(ngModel)]='selectedContact["Display Name"]'>
+        </mat-form-field>
+
+        <!-- start of personal details-->
+        <h4>Personal Details</h4>
+
+        <div class="row">
+
+          <mat-form-field class="example-full-width col-6">
+            <input matInput placeholder="First name" name="firstName" [(ngModel)]='selectedContact["First Name"]'>
+          </mat-form-field>
+          <mat-form-field class="example-full-width col-6">
+            <input matInput placeholder="Last name" name="lastName" [(ngModel)]='selectedContact["Last Name"]'>
+          </mat-form-field>
+
+          <mat-form-field class="example-full-width col-6">
+            <input matInput placeholder="Nick name" name="nickName" [(ngModel)]='selectedContact["Nickname"]'>
+          </mat-form-field>
+          <mat-form-field class="example-full-width col-6">
+            <mat-select placeholder="Gender" [(ngModel)]='selectedContact["Gender"]' name="gender">
+              <mat-option value="male">
+                Male
+              </mat-option>
+              <mat-option value="female">
+                Female
+              </mat-option>
+              <mat-option value="transgender">
+                Transgender
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field class="example-full-width col-12">
+            <input matInput placeholder="Email address" name="emailId" [(ngModel)]='selectedContact["E-mail Address"]'>
+          </mat-form-field>
+
+          <mat-form-field class="example-full-width col-12">
+            <textarea matInput placeholder="Home address" name="homeAddress" [(ngModel)]='selectedContact["Home Address 2"]'></textarea>
+          </mat-form-field>
+          <mat-form-field class="example-full-width col-6">
+            <textarea matInput placeholder="Home Street" name="homeStreet" [(ngModel)]='selectedContact["Home Street"]'></textarea>
+          </mat-form-field>
+          <mat-form-field class="example-full-width col-6">
+            <textarea matInput placeholder="Home City" name="homeCity" [(ngModel)]='selectedContact["Home City"]'></textarea>
+          </mat-form-field>
+          <mat-form-field class="example-full-width col-6">
+            <textarea matInput placeholder="Home State" name="homeState" [(ngModel)]='selectedContact["Home State"]'></textarea>
+          </mat-form-field>
+
+          <mat-form-field class="example-full-width col-6">
+            <mat-select placeholder="Home Country" [(ngModel)]='selectedContact["Home Country"]' name="homeCountry">
+              <mat-option *ngFor="let country of countries" [value]="country.code" (click)="onChangeOfCountry()">
+                {{country.name}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field class="example-full-width col-6">
+            <textarea matInput placeholder="Country Code" name="countryCode" [(ngModel)]='selectedContact["Country Code"]'></textarea>
+          </mat-form-field>
+          <mat-form-field class="example-full-width col-6">
+            <textarea matInput placeholder="Mobile" name="mobileNumber" [(ngModel)]='selectedContact["Mobile Phone"]'></textarea>
+          </mat-form-field>
+          <mat-form-field class="example-full-width col-6">
+            <input matInput #postalCode maxlength="6" placeholder="Postal Code" name="postalCode" [(ngModel)]='selectedContact["Home Postal Code"]'>
+            <mat-hint align="end">{{postalCode.value.length}} / 6</mat-hint>
+          </mat-form-field>
+          <mat-form-field class="example-full-width col-6">
+            <textarea matInput placeholder="Home Phone" name="homePhone" [(ngModel)]='selectedContact["Home Phone"]'></textarea>
+          </mat-form-field>
+
+          <mat-form-field class="example-full-width col-6">
+            <input matInput [matDatepicker]="picker" placeholder="Choose a Anniversary date" name="anniversary"
+              [(ngModel)]='selectedContact["Anniversary"]'>
+            <mat-datepicker-toggle matSuffix [for]="picker">
+              <mat-icon matDatepickerToggleIcon>keyboard_arrow_down</mat-icon>
+            </mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+          </mat-form-field>
+
+          <mat-form-field class="example-full-width col-6">
+            <input matInput [matDatepicker]="picker1" placeholder="Choose your Birth date" name="birthDate" [(ngModel)]='selectedContact["Birthday"]'>
+            <mat-datepicker-toggle matSuffix [for]="picker1">
+              <mat-icon matDatepickerToggleIcon>keyboard_arrow_down</mat-icon>
+            </mat-datepicker-toggle>
+            <mat-datepicker #picker1></mat-datepicker>
+          </mat-form-field>
+
+          <mat-form-field class="example-full-width col-6">
+            <textarea matInput placeholder="Home Fax" name="homeFax" [(ngModel)]='selectedContact["Home Fax"]'></textarea>
+          </mat-form-field>
+          <mat-form-field class="example-full-width col-6">
+            <textarea matInput placeholder="Categories" name="categories" [(ngModel)]='selectedContact["Categories"]'></textarea>
+          </mat-form-field>
+
+        </div>
+        <!-- end of personal details-->
+
+        <!-- start of Business details-->
+        <h4>Business Details</h4>
+
+        <div class="row">
+
+          <mat-form-field class="example-full-width col-6">
+            <input matInput placeholder="Job Title" name="jobTitle" [(ngModel)]='selectedContact["Job Title"]'>
+          </mat-form-field>
+          <mat-form-field class="example-full-width col-6">
+            <input matInput placeholder="Organization" name="lastName" [(ngModel)]='selectedContact["Organization"]'>
+          </mat-form-field>
+
+          <mat-form-field class="example-full-width col-6">
+            <input matInput placeholder="Department" name="department" [(ngModel)]='selectedContact["Department"]'>
+          </mat-form-field>
+          <mat-form-field class="example-full-width col-6">
+            <input matInput type="url" placeholder="Web Page" name="webPage" [(ngModel)]='selectedContact["Web Page"]'>
+          </mat-form-field>
+          <mat-form-field class="example-full-width col-12">
+            <input matInput type="url" placeholder="Web Page2" name="webPage2" [(ngModel)]='selectedContact["Web Page 2"]'>
+          </mat-form-field>
+          <mat-form-field class="example-full-width col-12">
+            <textarea matInput placeholder="Notes" name="notes" [(ngModel)]='selectedContact["Notes"]'></textarea>
+          </mat-form-field>
+          <mat-form-field class="example-full-width col-12">
+            <input matInput placeholder="Business Email address" name="emailId1" [(ngModel)]='selectedContact["E-mail 2 Address"]'>
+          </mat-form-field>
+          <mat-form-field class="example-full-width col-12">
+            <input matInput placeholder="Other Email address" name="emailId2" [(ngModel)]='selectedContact["E-mail 3 Address"]'>
+          </mat-form-field>
+
+          <mat-form-field class="example-full-width col-12">
+            <textarea matInput placeholder="Business address" name="businessAddress1" [(ngModel)]='selectedContact["Business Address"]'></textarea>
+          </mat-form-field>
+          <mat-form-field class="example-full-width col-12">
+            <textarea matInput placeholder="Business address 1" name="businessAddress2" [(ngModel)]='selectedContact["Business Address 2"]'></textarea>
+          </mat-form-field>
+          <mat-form-field class="example-full-width col-6">
+            <textarea matInput placeholder="Business Fax" name="businessFax" [(ngModel)]='selectedContact["Business Fax"]'></textarea>
+          </mat-form-field>
+          <mat-form-field class="example-full-width col-6">
+            <textarea matInput placeholder="Business City" name="businessCity" [(ngModel)]='selectedContact["Business City"]'></textarea>
+          </mat-form-field>
+          <mat-form-field class="example-full-width col-6">
+            <textarea matInput placeholder="Business State" name="businessState" [(ngModel)]='selectedContact["Business State"]'></textarea>
+          </mat-form-field>
+          <mat-form-field class="example-full-width col-6">
+            <mat-select placeholder="Business Country" [(ngModel)]='selectedContact["Business Country"]' name="homeCountry">
+              <mat-option *ngFor="let country of countries" [value]="country.name">
+                {{country.name}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <!-- <mat-form-field class="example-full-width col-6">
+            <textarea matInput placeholder="Business Country" name="businessCountry" [(ngModel)]='selectedContact["Business Country"]'></textarea>
+          </mat-form-field> -->
+
+          <mat-form-field class="example-full-width col-6">
+            <input matInput #postalCode maxlength="6" placeholder="Business Postal Code" name="businessPostalCode"
+              [(ngModel)]='selectedContact["Business Postal Code"]'>
+            <mat-hint align="end">{{postalCode.value.length}} / 6</mat-hint>
+          </mat-form-field>
+          <mat-form-field class="example-full-width col-6">
+            <textarea matInput placeholder="Business Phone" name="businessPhone" [(ngModel)]='selectedContact["Business Phone"]'></textarea>
+          </mat-form-field>
+
+        </div>
+        <!-- end of Business details-->
+
+        <!-- Save Button-->
+        <div class="row">
+          <div class="offset-4 col-4">
+            <button type="submit" mat-raised-button color="primary">Save Changes</button>
+          </div>
+        </div>
+      </form>
+    </div>
+    <!--end of right side section when a contact is selected-->
+
+    <!-- right side section when contact is not selected-->
+    <div *ngIf="!selectedContact" class=" col-12 col-sm-8 top-margin blankContent">
+      Select a contact to display details!!!
+    </div>
+    <!-- end of right side section when contact is not selected-->
+
+  </div>
+  <!-- end of outer row-->
+
+</section>
